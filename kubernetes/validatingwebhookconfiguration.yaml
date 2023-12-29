@@ -3,7 +3,7 @@ kind: ValidatingWebhookConfiguration
 metadata:
   name: replicas-validating-webhook
 webhooks:
-- name: replicas-validating-webhook.hoge.fuga.local
+- name: replicas-validating-webhook
   failurePolicy: Fail
   rules:
   - apiGroups: [""]
