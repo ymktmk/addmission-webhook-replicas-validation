@@ -1,0 +1,27 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: replicas-validating-webhook
+webhooks:
+- name: replicas-validating-webhook.hoge.fuga.local
+  failurePolicy: Fail
+  rules:
+  - apiGroups: [""]
+    apiVersions: ["v1"]
+    operations: ["CREATE"]
+    resources: ["deployments"]
+    scope: "Namespaced"
+  - apiGroups: [""]
+    apiVersions: ["v1"]
+    operations: ["UPDATE"]
+    resources: ["deployments"]
+    scope: "Namespaced"
+  clientConfig:
+    caBundle: <server.crtの中身をbase64エンコードして貼る>
+    service:
+      namespace: default
+      name: replicas-validating-webhook
+      path: /replicas/validate
+  admissionReviewVersions: ["v1"]
+  sideEffects: None
+  timeoutSeconds: 5
