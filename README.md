@@ -41,3 +41,16 @@ kubectl create secret tls replicas-validating-webhook-secret --key server.key --
 ```
 sed  "s/BASE64_ENCODED_PEM_FILE/$(base64 -i server.crt)/g" manifests/validatingwebhookconfiguration.yaml.template | kubectl apply -f -
 ```
+
+```
+kubectl apply -f manifests/deployment.yaml
+kubectl apply -f manifests/service.yaml
+```
+
+## 片付け
+```
+kubectl delete ValidatingWebhookConfiguration/replicas-validating-webhook
+kubectl delete Secret/replicas-validating-webhook-secret
+kubectl delete -f manifests/deployment.yaml
+kubectl delete -f manifests/service.yaml
+```
