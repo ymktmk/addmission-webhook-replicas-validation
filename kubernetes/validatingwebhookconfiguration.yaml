@@ -3,7 +3,7 @@ kind: ValidatingWebhookConfiguration
 metadata:
   name: replicas-validating-webhook
 webhooks:
-- name: replicas-validating-webhook
+- name: replicas-validating-webhook.default.svc.cluster.local
   failurePolicy: Fail
   rules:
   - apiGroups: [""]
