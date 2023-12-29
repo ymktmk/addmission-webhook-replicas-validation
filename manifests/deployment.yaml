@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: replicas-validating-webhook
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: replicas-validating-webhook
+  template:
+    metadata:
+      labels:
+        app: replicas-validating-webhook
+    spec:
+      containers:
+      - name: app
+        image: ghcr.io/ymktmk/replicas-validating-webhook:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: tls
+          mountPath: /tmp/tls
+        args:
+          - -server-cert=/tmp/tls/tls.crt
+          - -server-key=/tmp/tls/tls.key
+      volumes:
+      - name: tls
+        secret:
+          secretName: replicas-validating-webhook-secret
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: replicas-validating-webhook
+webhooks:
+- name: replicas-validating-webhook.default.svc.cluster.local
+  namespaceSelector:
+    matchExpressions:
+    - key: kubernetes.io/metadata.name
+      operator: In
+      values: ["wear2-connect"]
+  failurePolicy: Fail
+  rules:
+  - apiGroups: [""]
+    apiVersions: ["v1"]
+    operations: ["CREATE", "UPDATE"]
+    resources: ["deployments"]
+    scope: "Namespaced"
+  clientConfig:
+    caBundle: BASE64_ENCODED_PEM_FILE
+    service:
+      namespace: default
+      name: replicas-validating-webhook
+      path: /replicas/validate
+  admissionReviewVersions: ["v1"]
+  sideEffects: None
+  timeoutSeconds: 5

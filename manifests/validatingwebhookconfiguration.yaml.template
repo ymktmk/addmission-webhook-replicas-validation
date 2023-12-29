@@ -4,20 +4,20 @@ metadata:
   name: replicas-validating-webhook
 webhooks:
 - name: replicas-validating-webhook.default.svc.cluster.local
+  namespaceSelector:
+    matchExpressions:
+    - key: kubernetes.io/metadata.name
+      operator: In
+      values: ["wear2-auth"]
   failurePolicy: Fail
   rules:
   - apiGroups: [""]
     apiVersions: ["v1"]
-    operations: ["CREATE"]
-    resources: ["deployments"]
-    scope: "Namespaced"
-  - apiGroups: [""]
-    apiVersions: ["v1"]
-    operations: ["UPDATE"]
+    operations: ["CREATE", "UPDATE"]
     resources: ["deployments"]
     scope: "Namespaced"
   clientConfig:
-    caBundle: <server.crtの中身をbase64エンコードして貼る>
+    caBundle: BASE64_ENCODED_PEM_FILE
     service:
       namespace: default
       name: replicas-validating-webhook

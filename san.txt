@@ -1,0 +1,1 @@
+subjectAltName = DNS:replicas-validating-webhook.default.svc, DNS:replicas-validating-webhook.default.svc.cluster.local
