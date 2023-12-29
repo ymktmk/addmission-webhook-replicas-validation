@@ -26,7 +26,7 @@ echo "subjectAltName = DNS:replicas-validating-webhook.default.svc, DNS:replicas
 openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt -extfile san.txt
 ```
 
-## ローカルで起動する
+### ローカルで起動する
 
 ```
 go run main.go -server-cert=./server.crt -server-key=./server.key
